@@ -33,15 +33,34 @@ public class AudioManager : MonoBehaviour
 public class ScriptAction:ScriptableObject
 {
 
+    public enum ParamType
+    {
+        Bool,
+        Float,
+        Int,
+        String
+    }
+    
+    //变量信息
+    public struct ParamInfo
+    {
+        public string ParamName;
+        public ParamType ParamType;
+        public int IntParamValue;
+        public string StringParamValue;
+        public float FloatParamValue;
+        public bool BoolParamValue;
+    }
+
     //记录从外部传进来的参数 施法单位 目标单位 目标点 技能蓄力...
 
     public enum ActionNameEnum
     {
-        Delay,
-        HpDamage,
-        AddBuff,
-        AddComponent,
-
+        Delay,                      //延迟
+        HpDamage,                   //伤害
+        AddBuff,                    //添加buff
+        AddComponent,               //添加组件
+        IF_ELSEIF_ELSE_END          //如果
     }
 
     public enum ComponentEnum
@@ -51,6 +70,19 @@ public class ScriptAction:ScriptableObject
         AttackComponent
     }
 
+    //条件判断
+    public enum ConditionEnum
+    {
+        Equals,                     //等于
+        NotEqualTo,                 //不等于
+        GreaterThan,                //大于
+        LessThan,                   //小于
+        GreaterThanOrEqualTo,       //大于等于
+        LessThanOrEqualTo           //小于等于
+    }
+
+    //变量内容
+    Dictionary<string, ParamInfo> VariableInfoDict;
 
     //和editor建立关联 根据不同的方法名展现不同的参数 及返回值
     [SerializeField]
@@ -58,21 +90,10 @@ public class ScriptAction:ScriptableObject
     {
         //方法名字
         public ActionNameEnum ActionNameEnum;
-
-        #region 方法添加的组件名字
-        public ComponentEnum ComponentEnum;
-        #endregion
-
-        #region 技能的回调
-
-        //是否有伤害回调
-        public bool HasDamageCallBack;
-        //是否有到达目标回调
-        public bool HasTargetReachedCallBack;
         
-
-
-        #endregion
+        //用于if else 多层嵌套的情况
+        public List<List<ActionInfo>> ListActionInfo;
+    
 
         #region 方法参数
 
@@ -81,10 +102,10 @@ public class ScriptAction:ScriptableObject
         public bool BoolPara3;
         public bool BoolPara4;
 
-        public int FloatPara1;
-        public int FloatPara2;
-        public int FloatPara3;
-        public int FloatPara4;
+        public float FloatPara1;
+        public float FloatPara2;
+        public float FloatPara3;
+        public float FloatPara4;
 
         public int IntPara1;
         public int IntPara2;
@@ -96,17 +117,31 @@ public class ScriptAction:ScriptableObject
         public string StringPara3;
         public string StringPara4;
 
+        public ComponentEnum ComponentEnum1;
+        public ComponentEnum ComponentEnum2;
+        public ComponentEnum ComponentEnum3;
+        public ComponentEnum ComponentEnum4;
+
         #endregion
 
         #region 返回值
-
-        public bool BoolRtn1;
-        public bool FloatRtn1;
-        public bool IntRtn1;
-        public bool StringRtn1;
-        
+        public ParamInfo Ret;
         #endregion
     }
+
+    #region 技能的回调
+
+    //是否有伤害回调
+    public bool HasDamageCallBack;
+    //是否有到达目标回调
+    public bool HasTargetReachedCallBack;
+
+    //伤害回调
+    public List<ActionInfo> DamageCallBack;
+    //到达目标点回调
+    public List<ActionInfo> TargetReachedCallBack;
+
+    #endregion
 
     public List<ActionInfo> ActionInfoList;
     
