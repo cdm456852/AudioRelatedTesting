@@ -115,10 +115,20 @@ namespace ScriptActionNS
 
     public class ScriptAction : ScriptableObject
     {
+        public ScriptAction()
+        {
+            VariableInfoDict = new Dictionary<string, ParamInfo>();
+            HasDamageCallBack = false;
+            HasTargetReachedCallBack = false;
+            DamageCallBack = new List<ActionInfo>();
+            TargetReachedCallBack = new List<ActionInfo>();
+            ActionInfoList = new List<ActionInfo>();
+        }
+
         //记录从外部传进来的参数 施法单位 目标单位 目标点 技能蓄力...
         
         //变量内容
-        Dictionary<string, ParamInfo> VariableInfoDict;
+        public Dictionary<string, ParamInfo> VariableInfoDict;
         
         #region 技能的回调
 

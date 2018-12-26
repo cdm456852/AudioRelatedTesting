@@ -14,19 +14,68 @@ public class ScriptActionEditor:Editor
         if(scriptAction==null)
         {
             Debug.LogError("scriptAction==null");
+            return;
         }
-        if (scriptAction.ActionInfoList.Count <= 0)
-            GUILayout.Button("Create");
+        if (scriptAction.ActionInfoList == null)
+            scriptAction.ActionInfoList = new List<ActionInfo>();
+        if(scriptAction.ActionInfoList==null)
+        {
+            Debug.LogError("scriptAction.ActionInfoList==null");
+            return;
+        }
 
-        //for (int i = 0; i < scriptAction.ActionInfoList.Count; i++)
+        if (scriptAction.ActionInfoList!=null&&scriptAction.ActionInfoList.Count <= 0)
+        {
+            if( GUILayout.Button("Create"))
+            {
+                scriptAction.ActionInfoList.Add(new ActionInfo());
+            }
+        }
+
+        for (int i = 0; i < scriptAction.ActionInfoList.Count; i++)
+        {
+            ActionInfo actionInfo= scriptAction.ActionInfoList[i];
+            HandleEditActionInfo(actionInfo);
+            //如果是最后一个
+            if (i == scriptAction.ActionInfoList.Count - 1)
+            {
+                EditorGUILayout.BeginVertical();
+                if (GUILayout.Button("Add"))
+                {
+                    scriptAction.ActionInfoList.Add(new ActionInfo());
+                }
+                if (GUILayout.Button("Save"))
+                {
+                    AssetDatabase.SaveAssets();
+                }
+                EditorGUILayout.EndVertical();
+            }
+        }
+
+    }
+
+    //处理技能信息的编辑
+    public void HandleEditActionInfo(ActionInfo actionInfo)
+    {
+        //每一行技能脚本的开始
+        EditorGUILayout.BeginVertical();
+
+        EditorGUILayout.BeginHorizontal();
+
+        //GUILayout.Button(actionInfo.ActionNameEnum.ToString());
+
+        //if (GUILayout.Button("X"))
         //{
-        //    //如果是最后一个
-        //    if(i== scriptAction.ActionInfoList.Count-1)
-        //    {
-                
-        //    }
+        //    scriptAction.ActionInfoList.RemoveAt(i);
+        //    return;
         //}
+        actionInfo.ActionNameEnum= (ActionNameEnum)EditorGUILayout.EnumPopup("ActionNameEnum", actionInfo.ActionNameEnum,
+                                    GUILayout.Width(100), GUILayout.Height(20),
+                                    GUILayout.MaxWidth(200),GUILayout.MaxHeight(80),GUILayout.ExpandHeight(true),GUILayout.ExpandWidth(true));
+        EditorGUILayout.EndHorizontal();
 
+        //每一行技能脚本的结束
+        EditorGUILayout.EndVertical();
     }
 
 }
